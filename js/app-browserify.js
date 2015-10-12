@@ -19,7 +19,6 @@ var weatherModel = Backbone.Model.extend({
 })
 
 //==== VIEW USING REACT
-<<<<<<< HEAD
 var WeatherViewReact = React.createClass({
     render: function(){
         // console.log('info passed in view', this.props.weatherinfo)
@@ -94,59 +93,6 @@ var DaysColumns = React.createClass({
                     <div className="precip">Rain: {precip}%</div>
                 </div><br></br>
             </div>    
-=======
-
-var WeatherViewReact = React.createClass({
-    render: function(){
-        // console.log(this.props.weatherinfo)
-        return(
-            <div id='wview'>
-                <WeeklyTitle />
-                <DaysList />
-                <DayWeatherInfo weatherinfo={this.props.weatherinfo} />
-            </div>)
-    }
-})
-
-var WeeklyTitle = React.createClass({
-    render: function(){
-        return (<h1>Weekly Weather Report</h1>)
-    }
-})
-
-var DaysList = React.createClass({
-    render: function(){
-        return(
-            <div className='dayslist'>    
-                <div id="day1">Day 1</div>
-                <div id="day2">Day 2</div>
-                <div id="day3">Day 3</div>
-                <div id="day4">Day 4</div>
-                <div id="day5">Day 5</div>
-                <div id="day6">Day 6</div>
-                <div id="day7">Day 7</div>
-                <div id="day8">Day 8</div>
-            </div>    
-        )
-    }
-})
-
-var DayWeatherInfo = React.createClass({
-    render: function(){
-        console.log('viewinfo', this.props.weatherinfo)
-        return(
-            <div className='dayweatherinfo'>
-                <div id='summaryinfo'>This Week's Weather: {this.props.weatherinfo}</div>
-                <div id="day1info"></div>
-                <div id="day2info"></div>
-                <div id="day3info"></div>
-                <div id="day4info"></div>
-                <div id="day5info"></div>
-                <div id="day6info"></div>
-                <div id="day7info"></div>
-                <div id="day8info"></div>
-            </div>
->>>>>>> first commit, jsx this.props needs further work
         )
     }
 })
@@ -159,19 +105,11 @@ var weatherRouter = Backbone.Router.extend({
         '*anyroute': 'weatherDefault'
     },
     coordinates: function(llong){
-<<<<<<< HEAD
         this.wModel.latlong = llong
         var self = this
         this.wModel.fetch({
             dataType: 'jsonp'
         }).done(function(data){
-=======
-    	this.wModel.latlong = llong
-        var self = this
-    	this.wModel.fetch({
-    		dataType: 'jsonp'
-    	}).done(function(data){
->>>>>>> first commit, jsx this.props needs further work
             self.renderView(data)
             })
     },
@@ -184,23 +122,12 @@ var weatherRouter = Backbone.Router.extend({
             location.hash = 'coords/' + lat + ',' + long;            
         })
     },
-<<<<<<< HEAD
     renderView: function(pull){
         React.render(<WeatherViewReact weatherinfo={pull}/>, document.getElementById("wcontainer"))
     },
     initialize: function(){
         this.wModel = new weatherModel     
         // console.log('router', this)
-=======
-
-    renderView: function(pull){
-        React.render(<WeatherViewReact weatherinfo={pull}/>, document.getElementById("wcontainer"))
-    },
-
-    initialize: function(){
-    	this.wModel = new weatherModel     
-        console.log('router', this)
->>>>>>> first commit, jsx this.props needs further work
     }
 })
 var wRouter = new weatherRouter
