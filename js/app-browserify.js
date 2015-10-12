@@ -19,60 +19,85 @@ var weatherModel = Backbone.Model.extend({
 })
 
 //==== VIEW USING REACT
-
 var WeatherViewReact = React.createClass({
     render: function(){
-        // console.log(this.props.weatherinfo)
+        // console.log('info passed in view', this.props.weatherinfo)
         return(
             <div id='wview'>
-                <WeeklyTitle />
-                <DaysList />
-                <DayWeatherInfo weatherinfo={this.props.weatherinfo} />
+                <WeeklyTitle weatherinfo={this.props.weatherinfo}/>
+                <DaysMapArr weatherinfo={this.props.weatherinfo}/>
             </div>)
     }
 })
 
 var WeeklyTitle = React.createClass({
     render: function(){
-        return (<h1>Weekly Weather Report</h1>)
+        console.log('weeklytitle', this.props.weatherinfo)
+        var summaryWeek = this.props.weatherinfo.daily.summary
+        return (
+            <div className="titlehead">
+                <h3 id='weeklytitle'>Weekly Weather Report</h3>
+                <h5>This Week: {summaryWeek}</h5> 
+            </div>
+        )
     }
 })
 
-var DaysList = React.createClass({
-    render: function(){
+var DaysMapArr = React.createClass({
+
+    _daysnumberandinfo: function(daysinfo){
         return(
-            <div className='dayslist'>    
-                <div id="day1">Day 1</div>
-                <div id="day2">Day 2</div>
-                <div id="day3">Day 3</div>
-                <div id="day4">Day 4</div>
-                <div id="day5">Day 5</div>
-                <div id="day6">Day 6</div>
-                <div id="day7">Day 7</div>
-                <div id="day8">Day 8</div>
+            <DaysColumns weatherinfo={daysinfo}/>
+        )
+    },
+
+    render: function(){
+        var wInfo = this.props.weatherinfo.daily.data 
+        return(
+            <div id="week">{wInfo.map(this._daysnumberandinfo)}</div>
+        )
+    }
+})
+
+var DaysColumns = React.createClass({
+
+    getInitialState: function(){
+        return{
+            dayInfoDisplay: 'none'
+        }
+    },
+
+    _handleDayInfoDisplay: function(event){
+        // console.log('click on dayinfo')
+        if (this.state.dayInfoDisplay === 'none'){ 
+            this.setState({dayInfoDisplay:'block'})
+        }
+        else{this.setState({dayInfoDisplay: 'none'})}
+        
+    },
+
+    render: function(){
+        console.log("weather info per day", this.props.weatherinfo)
+        var dayofWeek = new Date(this.props.weatherinfo.time).toString().substr(0,3)
+        var tempHigh = this.props.weatherinfo.apparentTemperatureMax
+        var tempLow = this.props.weatherinfo.apparentTemperatureMin
+        var precip = Math.floor(this.props.weatherinfo.precipProbability)*100
+        var daySummary = this.props.weatherinfo.summary
+        var dayInfoDisplayObj = {display: this.state.dayInfoDisplay}
+        return(
+            <div className='daycolumn'>
+                <div className="daynumsumm" onClick={this._handleDayInfoDisplay}>{dayofWeek}: {daySummary}</div>
+                <div className="dayinfo" style={dayInfoDisplayObj}>
+                    <div className="temphigh">High: {tempHigh} F</div>
+                    <div className="templow">Low: {tempLow} F</div>
+                    <div className="precip">Rain: {precip}%</div>
+                </div><br></br>
             </div>    
         )
     }
 })
 
-var DayWeatherInfo = React.createClass({
-    render: function(){
-        console.log('viewinfo', this.props.weatherinfo)
-        return(
-            <div className='dayweatherinfo'>
-                <div id='summaryinfo'>This Week's Weather: {this.props.weatherinfo}</div>
-                <div id="day1info"></div>
-                <div id="day2info"></div>
-                <div id="day3info"></div>
-                <div id="day4info"></div>
-                <div id="day5info"></div>
-                <div id="day6info"></div>
-                <div id="day7info"></div>
-                <div id="day8info"></div>
-            </div>
-        )
-    }
-})
+
 //==== CONTROLLER
 var weatherRouter = Backbone.Router.extend({
     routes: {
@@ -102,7 +127,7 @@ var weatherRouter = Backbone.Router.extend({
     },
     initialize: function(){
         this.wModel = new weatherModel     
-        console.log('router', this)
+        // console.log('router', this)
     }
 })
 var wRouter = new weatherRouter
